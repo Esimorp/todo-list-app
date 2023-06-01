@@ -1,1 +1,4 @@
-{}
+{
+  "TODO_NOT_EXISTED": "task is not existed",
+  "WRONG_PERMISSIONS": "wrong permissions"
+}

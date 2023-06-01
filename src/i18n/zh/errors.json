@@ -1,1 +1,4 @@
-{}
+{
+  "TODO_NOT_EXISTED": "任务不存在",
+  "WRONG_PERMISSIONS": "权限错误"
+}
