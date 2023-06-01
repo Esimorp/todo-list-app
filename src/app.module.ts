@@ -13,11 +13,21 @@ import {
 } from './common';
 import { TodoListModule } from './todo-list/todo-list.module';
 import { UserModule } from './user/user.module';
+import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
+import * as path from 'path';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: ['./working-dir/env/.env.local', './working-dir/env/.env'],
+    }),
+    I18nModule.forRoot({
+      fallbackLanguage: 'zh',
+      loaderOptions: {
+        path: path.join(__dirname, '/i18n/'),
+        watch: true,
+      },
+      resolvers: [AcceptLanguageResolver],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
