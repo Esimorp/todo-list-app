@@ -1,1 +1,9 @@
 export const APP_RUNNING_PORT = 'APP_RUNNING_PORT';
+export type DATABASE_TYPES = 'mysql' | 'mariadb' | 'postgres';
+export const DATABASE_TYPE = 'DATABASE_TYPE';
+export const DATABASE_HOST = 'DATABASE_HOST';
+export const DATABASE_PORT = 'DATABASE_PORT';
+export const DATABASE_USER = 'DATABASE_USER';
+export const DATABASE_PASSWORD = 'DATABASE_PASSWORD';
+export const DATABASE_NAME = 'DATABASE_NAME';
+export const DATABASE_SYNCHRONIZE = 'DATABASE_SYNCHRONIZE';
