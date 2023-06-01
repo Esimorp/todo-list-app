@@ -11,6 +11,7 @@ import {
   DATABASE_TYPES,
   DATABASE_USER,
 } from './common';
+import { TodoListModule } from './todo-list/todo-list.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import {
         };
       },
     }),
+    TodoListModule,
   ],
   controllers: [],
   providers: [],
