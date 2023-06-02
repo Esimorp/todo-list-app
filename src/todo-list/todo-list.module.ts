@@ -1,14 +1,28 @@
 import { Module } from '@nestjs/common';
 import { TodoController, TodoService } from './todo';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Todo, TodoChangeLog } from './entities';
+import {
+  Comment,
+  Mention,
+  MessageInbox,
+  Todo,
+  TodoChangeLog,
+} from './entities';
 import { TodoRepo } from './repositories/todo.repo';
 import { I18nContext } from 'nestjs-i18n';
 import { TodoChangeLogRepo } from './repositories/todo-change-log.repo';
 import { TodoChangeLogController, TodoChangeLogService } from './change-log';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Todo, TodoChangeLog])],
+  imports: [
+    TypeOrmModule.forFeature([
+      Todo,
+      TodoChangeLog,
+      Comment,
+      Mention,
+      MessageInbox,
+    ]),
+  ],
   controllers: [TodoController, TodoChangeLogController],
   providers: [
     TodoService,
