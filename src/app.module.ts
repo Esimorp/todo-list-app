@@ -15,6 +15,8 @@ import { TodoListModule } from './todo-list/todo-list.module';
 import { UserModule } from './user/user.module';
 import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
 import * as path from 'path';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './guards';
 
 @Module({
   imports: [
@@ -50,6 +52,11 @@ import * as path from 'path';
     UserModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule {}
