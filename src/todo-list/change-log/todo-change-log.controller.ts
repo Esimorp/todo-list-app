@@ -1,18 +1,18 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { CommonController } from '../../common';
 import { TodoChangeLogService } from './todo-change-log.service';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TodoChangeLog } from '../entities';
 import { Uid } from '../../decorators';
 import { ApiSuccessPageResponseDecorator } from '../../decorators/api-success-page-response.decorator';
 import { FindPageDto } from '../../common/find-page.dto';
 
-@Controller('change-log')
+@Controller()
 export class TodoChangeLogController extends CommonController {
-  @Get()
+  @Get('/todo/:todoId/change-log')
   @ApiTags('Todo相关')
   @ApiOperation({ description: 'Todo修改历史记录' })
-  @ApiQuery({
+  @ApiParam({
     name: 'todoId',
     description: '要查询的Todo的id',
   })
@@ -22,7 +22,7 @@ export class TodoChangeLogController extends CommonController {
   })
   @ApiSuccessPageResponseDecorator(TodoChangeLog)
   public async listChangeLog(
-    @Query('todoId') todoId: number,
+    @Param('todoId') todoId: number,
     @Query() findPageDto: FindPageDto,
     @Uid() uid: number,
   ) {
