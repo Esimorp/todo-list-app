@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { TodoChangeLogRepo } from '../repositories/todo-change-log.repo';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TodoChangeAction, TodoChangeLog } from '../entities';
+import { Todo, TodoChangeAction, TodoChangeLog } from '../entities';
 import { User } from '../../user/entities';
 import { TodoRepo } from '../repositories/todo.repo';
 import { I18nService } from 'nestjs-i18n';
@@ -28,7 +28,7 @@ export class TodoChangeLogService {
     payload: string,
   ) {
     const changeLog = new TodoChangeLog();
-    changeLog.todoId = todoId;
+    changeLog.todo = { id: todoId } as Todo;
     changeLog.action = action;
     changeLog.operator = { id: userId } as User;
     changeLog.payload = payload;
@@ -47,7 +47,7 @@ export class TodoChangeLogService {
       );
     const { pageSize, pageIndex } = findPageDto;
     return this.todoChangeLogRepo.findAndCount({
-      where: { todoId },
+      where: { todo: { id: todoId } },
       take: pageSize,
       skip: pageIndex * pageSize,
     });

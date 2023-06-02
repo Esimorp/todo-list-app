@@ -8,6 +8,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { User } from '../../user/entities';
+import { TodoChangeLog } from './todo-change-log.entity';
 
 @Entity()
 export class Todo extends CommonEntity {
@@ -31,7 +32,11 @@ export class Todo extends CommonEntity {
    */
   @OneToMany(() => Todo, (todo) => todo.parentTodo)
   subTodos: Promise<Todo[]>;
-
+  /**
+   * 子任务列表,懒加载
+   */
+  @OneToMany(() => TodoChangeLog, (todoChangeLog) => todoChangeLog.todo)
+  changeLogs: Promise<TodoChangeLog[]>;
   /**
    * 负责人
    */

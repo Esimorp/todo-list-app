@@ -1,11 +1,12 @@
 import { CommonEntity } from '../../common';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { User } from '../../user/entities';
+import { Todo } from './todo.entity';
 
 @Entity()
 export class TodoChangeLog extends CommonEntity {
-  @Column({ comment: 'Todo id' })
-  todoId: number;
+  @ManyToOne(() => Todo, (todo) => todo.changeLogs)
+  todo: Todo;
   @Column({ comment: '动作' })
   action: number;
   @Column({ comment: '载荷', nullable: true })
