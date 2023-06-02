@@ -50,3 +50,14 @@ export class Todo extends CommonEntity {
   @JoinTable()
   watchers: Promise<User[]>;
 }
+
+export enum TodoOrder {
+  CREATE_AT_ASC = 'CREATE_AT_ASC',
+  CREATE_AT_DESC = 'CREATE_AT_DESC',
+  DEADLINE_ASC = 'DEADLINE_ASC',
+  DEADLINE_DESC = 'DEADLINE_DESC',
+  OWNER_ASC = 'OWNER_ASC',
+  OWNER_DESC = 'OWNER_DESC',
+  ID_ASC = 'ID_ASC',
+  ID_DESC = 'ID_DESC',
+}

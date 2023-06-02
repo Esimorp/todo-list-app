@@ -6,12 +6,21 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { TodoRepo } from '../repositories/todo.repo';
 import { CreateTodoDto } from '../dto/create-todo.dto';
-import { Todo, TodoChangeAction } from '../entities';
-import { DeepPartial } from 'typeorm';
+import { Todo, TodoChangeAction, TodoOrder } from '../entities';
+import {
+  Between,
+  DeepPartial,
+  FindOptionsOrder,
+  FindOptionsWhere,
+  LessThan,
+  MoreThan,
+} from 'typeorm';
 import { UpdateTodoDto } from '../dto/update-todo.dto';
 import { AddSubTodoDto } from '../dto/add-sub-todo.dto';
 import { I18nService } from 'nestjs-i18n';
-import { TodoChangeLogService } from '../change-log/todo-change-log.service';
+import { TodoChangeLogService } from '../change-log';
+import { FindPageDto } from '../../common/find-page.dto';
+import { FindTodoDto } from '../dto/find-todo.dto';
 
 @Injectable()
 export class TodoService {
@@ -124,5 +133,57 @@ export class TodoService {
         await this.i18n.t('errors.WRONG_PERMISSIONS'),
       );
     return await this.todoRepository.softRemove(existed);
+  }
+
+  async findTodos(findPageDto: FindPageDto, findTodoDto: FindTodoDto) {
+    const where = {} as FindOptionsWhere<Todo>;
+    const orderBy = {} as FindOptionsOrder<Todo>;
+    const { startAt, endAt, ownerId, order } = findTodoDto;
+    if (startAt && endAt) {
+      where.created_at = Between(findTodoDto.startAt, findTodoDto.endAt);
+    } else if (startAt) {
+      where.created_at = MoreThan(startAt);
+    } else if (startAt) {
+      where.created_at = LessThan(endAt);
+    }
+
+    if (ownerId) {
+      where.owner = { id: ownerId };
+    }
+
+    switch (order) {
+      case TodoOrder.CREATE_AT_ASC:
+        orderBy.created_at = 'ASC';
+        break;
+      case TodoOrder.CREATE_AT_DESC:
+        orderBy.created_at = 'DESC';
+        break;
+      case TodoOrder.DEADLINE_ASC:
+        orderBy.deadline = 'ASC';
+        break;
+      case TodoOrder.DEADLINE_DESC:
+        orderBy.deadline = 'DESC';
+        break;
+      case TodoOrder.OWNER_ASC:
+        orderBy.owner = { id: 'ASC' };
+        break;
+      case TodoOrder.OWNER_DESC:
+        orderBy.owner = { id: 'DESC' };
+        break;
+      case TodoOrder.ID_ASC:
+        orderBy.id = 'ASC';
+        break;
+      case TodoOrder.ID_DESC:
+        orderBy.id = 'DESC';
+        break;
+    }
+    const { pageSize, pageIndex } = findPageDto;
+    return this.todoRepository.findAndCount({
+      where,
+      order: orderBy,
+      relations: { owner: true },
+      take: pageSize,
+      skip: pageIndex * pageSize,
+    });
   }
 }

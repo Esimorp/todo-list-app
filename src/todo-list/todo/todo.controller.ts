@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   ParseIntPipe,
   Post,
   Put,
@@ -19,9 +20,12 @@ import {
 import { CommonController } from '../../common';
 import { TodoService } from './todo.service';
 import { ApiSuccessResponse } from '../../decorators/api-success-response.decorator';
-import { Todo } from '../entities';
+import { Todo, TodoChangeLog } from '../entities';
 import { UpdateTodoDto } from '../dto/update-todo.dto';
 import { AddSubTodoDto } from '../dto/add-sub-todo.dto';
+import { FindPageDto } from '../../common/find-page.dto';
+import { ApiSuccessPageResponseDecorator } from '../../decorators/api-success-page-response.decorator';
+import { FindTodoDto } from '../dto/find-todo.dto';
 
 @Controller('todo')
 export class TodoController extends CommonController {
@@ -126,5 +130,31 @@ export class TodoController extends CommonController {
   ) {
     const removedTodo = await this.todoService.removeTodo(todoId, uid);
     return this.success(removedTodo);
+  }
+
+  @Get()
+  @ApiTags('Todo相关')
+  @ApiOperation({ description: 'Todo修改历史记录' })
+  @ApiResponse({
+    status: 401,
+    description: '用户未登录',
+  })
+  @ApiSuccessPageResponseDecorator(TodoChangeLog)
+  public async listTodos(
+    @Query() findPageDto: FindPageDto,
+    @Query() findTodoDto: FindTodoDto,
+    @Uid() uid: number,
+  ) {
+    const [list, total] = await this.todoService.findTodos(
+      findPageDto,
+      findTodoDto,
+    );
+    return this.successPage(
+      list,
+      total,
+      Math.ceil(total / findPageDto.pageSize),
+      findPageDto.pageIndex,
+      findPageDto.pageSize,
+    );
   }
 }

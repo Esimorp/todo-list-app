@@ -24,7 +24,7 @@ export class TodoChangeLogController extends CommonController {
     description: '用户未登录',
   })
   @ApiSuccessPageResponseDecorator(TodoChangeLog)
-  public async createTodo(
+  public async listChangeLog(
     @Query('todoId') todoId: number,
     @Query() findPageDto: FindPageDto,
     @Uid() uid: number,
@@ -34,7 +34,6 @@ export class TodoChangeLogController extends CommonController {
       findPageDto,
       uid,
     );
-    console.log(list);
     return this.successPage(
       list,
       total,
