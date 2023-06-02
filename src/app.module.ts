@@ -24,7 +24,11 @@ import { AuthGuard } from './guards';
       envFilePath: ['./working-dir/env/.env.local', './working-dir/env/.env'],
     }),
     I18nModule.forRoot({
-      fallbackLanguage: 'zh',
+      fallbackLanguage: 'en',
+      fallbacks: {
+        'en-*': 'en',
+        'zh-*': 'zh',
+      },
       loaderOptions: {
         path: path.join(__dirname, '/i18n/'),
         watch: true,
