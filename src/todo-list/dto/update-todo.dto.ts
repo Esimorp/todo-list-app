@@ -6,6 +6,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
 
 export class UpdateTodoDto {
   @IsNotEmpty()
@@ -23,6 +24,8 @@ export class UpdateTodoDto {
    */
   title: string;
   @IsDate()
+  @Type(() => Date)
+  @Transform((value) => value.valueOf(), { toPlainOnly: true })
   /**
    * 新的截止日期
    */
