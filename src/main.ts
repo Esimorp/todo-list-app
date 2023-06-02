@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { APP_RUNNING_PORT, logger } from './common';
-import { ConfigService } from '@nestjs/config';
+import { logger } from './common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 
@@ -9,9 +8,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: logger('todolist-app', './working-dir/logs'),
   });
-  const configService = app.get(ConfigService);
-  const port = configService.getOrThrow<number>(APP_RUNNING_PORT);
-
   const config = new DocumentBuilder()
     .setTitle('Todolist App')
     .setDescription('RESTFUL API')
@@ -28,7 +24,7 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(port);
+  await app.listen(3000);
 }
 
 bootstrap();
