@@ -16,9 +16,6 @@ export class TodoChangeLogController extends CommonController {
     name: 'todoId',
     description: '要查询的Todo的id',
   })
-  @ApiQuery({
-    type: FindPageDto,
-  })
   @ApiResponse({
     status: 401,
     description: '用户未登录',

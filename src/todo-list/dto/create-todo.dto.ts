@@ -1,4 +1,10 @@
-import { IsDate, IsNotEmpty, MaxLength, MinLength } from 'class-validator';
+import {
+  IsDate,
+  IsNotEmpty,
+  IsNumber,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 
 export class CreateTodoDto {
@@ -18,11 +24,18 @@ export class CreateTodoDto {
   @Transform((value) => value.valueOf(), { toPlainOnly: true })
   deadline: Date;
 
-  @MinLength(1)
-  @MaxLength(2000)
   /**
    * 任务描述
    * @example 描述描述描述描述
    */
+  @MinLength(1)
+  @MaxLength(2000)
   description: string;
+
+  /**
+   * 组织Id
+   * @example 1
+   */
+  @IsNumber()
+  organizationId: number;
 }

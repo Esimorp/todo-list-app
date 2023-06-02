@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { User } from '../../user/entities';
 import { TodoChangeLog } from './todo-change-log.entity';
+import { Organization } from '../../user/entities/organization.entity';
 
 @Entity()
 export class Todo extends CommonEntity {
@@ -42,6 +43,11 @@ export class Todo extends CommonEntity {
    */
   @ManyToOne(() => User, (user) => user.ownedTodos, { eager: true })
   owner: User;
+  /**
+   * 所属组织
+   */
+  @ManyToOne(() => Organization, (organization) => organization.todos)
+  organization: Organization;
 
   /**
    * todo的观察者

@@ -35,4 +35,10 @@ export class FindTodoDto {
   @ApiPropertyOptional()
   @IsOptional()
   ownerId: number;
+  /**
+   * 组织Id
+   */
+  @IsNumber()
+  @IsOptional()
+  organizationId: number;
 }

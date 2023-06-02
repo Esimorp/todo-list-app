@@ -1,6 +1,7 @@
 import { CommonEntity } from '../../common';
 import { Entity, ManyToMany, OneToMany } from 'typeorm';
 import { Todo } from '../../todo-list/entities';
+import { Organization } from './organization.entity';
 
 @Entity()
 export class User extends CommonEntity {
@@ -15,4 +16,9 @@ export class User extends CommonEntity {
    */
   @ManyToMany(() => Todo, (todo) => todo.watchers)
   watchedTodos: Promise<Todo[]>;
+  /**
+   * 用户加入的组织
+   */
+  @ManyToMany(() => Organization, (organizations) => organizations.members)
+  organizations: Promise<Organization[]>;
 }

@@ -37,6 +37,8 @@ export class TodoService {
   ): Promise<Todo> {
     const todo: DeepPartial<Todo> = createTodoDto;
     todo.owner = { id: userId };
+
+    //TODO do with createTodoDto.organizationId
     const result = await this.todoRepository.save(todo);
     await this.todoChangeLogService.addChangeLog(
       TodoChangeAction.CREATE_TODO,
@@ -136,6 +138,7 @@ export class TodoService {
   }
 
   async findTodos(findPageDto: FindPageDto, findTodoDto: FindTodoDto) {
+    //TODO find with findTodoDto.organizationId
     const where = {} as FindOptionsWhere<Todo>;
     const orderBy = {} as FindOptionsOrder<Todo>;
     const { startAt, endAt, ownerId, order } = findTodoDto;
