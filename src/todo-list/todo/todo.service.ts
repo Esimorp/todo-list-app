@@ -65,4 +65,17 @@ export class TodoService {
     subTodo.owner = { id: userId };
     return await this.todoRepository.save(subTodo);
   }
+
+  public async removeTodo(todoId: number, userId: number): Promise<Todo> {
+    const existed = await this.todoRepository.findOneBy({ id: todoId });
+    if (!existed)
+      throw new BadRequestException(
+        await this.i18n.t('errors.TODO_NOT_EXISTED'),
+      );
+    if (existed.owner.id != userId)
+      throw new ForbiddenException(
+        await this.i18n.t('errors.WRONG_PERMISSIONS'),
+      );
+    return await this.todoRepository.softRemove(existed);
+  }
 }

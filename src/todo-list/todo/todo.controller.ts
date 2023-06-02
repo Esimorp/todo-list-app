@@ -1,7 +1,21 @@
-import { Body, Controller, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  ParseIntPipe,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { CreateTodoDto } from '../dto/create-todo.dto';
 import { Uid } from '../../decorators';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CommonController } from '../../common';
 import { TodoService } from './todo.service';
 import { ApiSuccessResponse } from '../../decorators/api-success-response.decorator';
@@ -82,5 +96,35 @@ export class TodoController extends CommonController {
   public async addSubTodo(@Body() addSubTodoDto: AddSubTodoDto, @Uid() uid) {
     const createdTodo = await this.todoService.addSubTodo(addSubTodoDto, uid);
     return this.success(createdTodo);
+  }
+
+  @Delete('')
+  @ApiTags('Todo相关')
+  @ApiOperation({
+    description: '移除任务',
+  })
+  @ApiQuery({
+    name: 'id',
+    example: 1,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'todo不存在',
+  })
+  @ApiResponse({
+    status: 403,
+    description: '权限验证失败',
+  })
+  @ApiResponse({
+    status: 401,
+    description: '用户未登录',
+  })
+  @ApiSuccessResponse(Todo)
+  public async removeTodo(
+    @Query('id', ParseIntPipe) todoId: number,
+    @Uid() uid,
+  ) {
+    const removedTodo = await this.todoService.removeTodo(todoId, uid);
+    return this.success(removedTodo);
   }
 }
