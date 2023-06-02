@@ -5,8 +5,7 @@ import { Todo, TodoChangeLog } from './entities';
 import { TodoRepo } from './repositories/todo.repo';
 import { I18nContext } from 'nestjs-i18n';
 import { TodoChangeLogRepo } from './repositories/todo-change-log.repo';
-import { TodoChangeLogService } from './change-log/todo-change-log.service';
-import { TodoChangeLogController } from './change-log/todo-change-log.controller';
+import { TodoChangeLogController, TodoChangeLogService } from './change-log';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Todo, TodoChangeLog])],
