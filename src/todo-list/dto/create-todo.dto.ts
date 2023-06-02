@@ -1,4 +1,5 @@
 import { IsDate, IsNotEmpty, MaxLength, MinLength } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
 
 export class CreateTodoDto {
   /**
@@ -13,6 +14,8 @@ export class CreateTodoDto {
    * 任务截止日期
    */
   @IsDate()
+  @Type(() => Date)
+  @Transform((value) => value.valueOf(), { toPlainOnly: true })
   deadline: Date;
 
   @MinLength(1)

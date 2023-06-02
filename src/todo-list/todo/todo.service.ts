@@ -10,14 +10,14 @@ import { Todo } from '../entities';
 import { DeepPartial } from 'typeorm';
 import { UpdateTodoDto } from '../dto/update-todo.dto';
 import { AddSubTodoDto } from '../dto/add-sub-todo.dto';
-import { I18n, I18nContext } from 'nestjs-i18n';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class TodoService {
   constructor(
     @InjectRepository(TodoRepo)
     private todoRepository: TodoRepo,
-    @I18n() private i18n: I18nContext,
+    private readonly i18n: I18nService,
   ) {}
 
   public async createTodo(
@@ -30,10 +30,10 @@ export class TodoService {
   }
 
   public async updateTodo(
-    createTodoDto: UpdateTodoDto,
+    updateTodoDto: UpdateTodoDto,
     userId: number,
   ): Promise<Todo> {
-    const { id } = createTodoDto;
+    const { id } = updateTodoDto;
     const existed = await this.todoRepository.findOneBy({ id });
     if (!existed)
       throw new BadRequestException(
@@ -43,7 +43,7 @@ export class TodoService {
       throw new ForbiddenException(
         await this.i18n.t('errors.WRONG_PERMISSIONS'),
       );
-    return await this.todoRepository.save(createTodoDto);
+    return await this.todoRepository.save(updateTodoDto);
   }
 
   public async addSubTodo(
@@ -62,6 +62,7 @@ export class TodoService {
       );
     const subTodo: DeepPartial<Todo> = addSubTodoDto;
     subTodo.parentTodo = { id: addSubTodoDto.parentId };
+    subTodo.owner = { id: userId };
     return await this.todoRepository.save(subTodo);
   }
 }

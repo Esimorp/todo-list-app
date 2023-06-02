@@ -23,7 +23,7 @@ export class Todo extends CommonEntity {
   /**
    * 父级任务,为空时为顶级任务
    */
-  @ManyToOne(() => Todo, (todo) => todo.subTodos, { eager: true })
+  @ManyToOne(() => Todo, (todo) => todo.subTodos)
   parentTodo: Todo;
 
   /**
@@ -35,7 +35,7 @@ export class Todo extends CommonEntity {
   /**
    * 负责人
    */
-  @ManyToOne(() => User, (user) => user.ownedTodos)
+  @ManyToOne(() => User, (user) => user.ownedTodos, { eager: true })
   owner: User;
 
   /**

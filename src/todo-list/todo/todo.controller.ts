@@ -1,11 +1,13 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Put } from '@nestjs/common';
 import { CreateTodoDto } from '../dto/create-todo.dto';
 import { Uid } from '../../decorators';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CommonController } from '../../common';
 import { TodoService } from './todo.service';
 import { ApiSuccessResponse } from '../../decorators/api-success-response.decorator';
 import { Todo } from '../entities';
+import { UpdateTodoDto } from '../dto/update-todo.dto';
+import { AddSubTodoDto } from '../dto/add-sub-todo.dto';
 
 @Controller('todo')
 export class TodoController extends CommonController {
@@ -14,6 +16,7 @@ export class TodoController extends CommonController {
   }
 
   @Post()
+  @ApiTags('Todo相关')
   @ApiOperation({ description: '创建Todo接口' })
   @ApiBody({
     type: CreateTodoDto,
@@ -25,6 +28,59 @@ export class TodoController extends CommonController {
   @ApiSuccessResponse(Todo)
   public async createTodo(@Body() createTodoDto: CreateTodoDto, @Uid() uid) {
     const createdTodo = await this.todoService.createTodo(createTodoDto, uid);
+    return this.success(createdTodo);
+  }
+
+  @Put()
+  @ApiTags('Todo相关')
+  @ApiOperation({
+    description:
+      '更新Todo接口，修改基本信息、添加描述、修改Todo状态都通过此接口',
+  })
+  @ApiBody({
+    type: UpdateTodoDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'todo不存在',
+  })
+  @ApiResponse({
+    status: 403,
+    description: '权限验证失败',
+  })
+  @ApiResponse({
+    status: 401,
+    description: '用户未登录',
+  })
+  @ApiSuccessResponse(Todo)
+  public async updateTodo(@Body() updateTodoDto: UpdateTodoDto, @Uid() uid) {
+    const updatedTodo = await this.todoService.updateTodo(updateTodoDto, uid);
+    return this.success(updatedTodo);
+  }
+
+  @Post('/sub-todo')
+  @ApiTags('Todo相关')
+  @ApiOperation({
+    description: '添加子任务',
+  })
+  @ApiBody({
+    type: AddSubTodoDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'todo不存在',
+  })
+  @ApiResponse({
+    status: 403,
+    description: '权限验证失败',
+  })
+  @ApiResponse({
+    status: 401,
+    description: '用户未登录',
+  })
+  @ApiSuccessResponse(Todo)
+  public async addSubTodo(@Body() addSubTodoDto: AddSubTodoDto, @Uid() uid) {
+    const createdTodo = await this.todoService.addSubTodo(addSubTodoDto, uid);
     return this.success(createdTodo);
   }
 }
