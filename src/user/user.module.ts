@@ -9,10 +9,11 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { OrganizationService } from './organization/organization.service';
 import { OrganizationRepo } from './repositories/organization.repo';
+import { OrganizationController } from './organization/organization.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Organization])],
-  controllers: [UserController],
+  controllers: [UserController, OrganizationController],
   providers: [
     UserService,
     UserRepo,

@@ -2,5 +2,7 @@
   "TODO_NOT_EXISTED": "task is not existed",
   "WRONG_PERMISSIONS": "wrong permissions",
   "USERNAME_ALREADY_EXISTED": "username already existed",
-  "WRONG_USERNAME_OR_PASSWORD": "username or password is wrong"
+  "WRONG_USERNAME_OR_PASSWORD": "username or password is wrong",
+  "ORGANIZATION_NOT_EXISTED": "organization not found",
+  "USER_ALREADY_IN_ORGANIZATION": "user is already existed in organization "
 }
