@@ -17,9 +17,11 @@ import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
 import * as path from 'path';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
+    JwtModule,
     ConfigModule.forRoot({
       envFilePath: ['./working-dir/env/.env.local', './working-dir/env/.env'],
     }),

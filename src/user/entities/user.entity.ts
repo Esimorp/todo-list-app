@@ -1,10 +1,14 @@
 import { CommonEntity } from '../../common';
-import { Entity, ManyToMany, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
 import { Todo } from '../../todo-list/entities';
 import { Organization } from './organization.entity';
 
 @Entity()
 export class User extends CommonEntity {
+  @Column({ length: 12, unique: true })
+  username: string;
+  @Column({ length: 60, unique: true })
+  password: string;
   /**
    * 用户负责的Todos
    */
