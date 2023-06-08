@@ -13,6 +13,9 @@ import { APP_SECRET } from '../../common';
 import Hashids from 'hashids';
 import { JwtService } from '@nestjs/jwt';
 import { I18nService } from 'nestjs-i18n';
+import { OrganizationService } from '../organization/organization.service';
+import { DataSource } from 'typeorm';
+import { Organization } from '../entities/organization.entity';
 
 const BCRYPT_GEN_SALTS_ROUND = 7;
 
@@ -21,8 +24,10 @@ export class UserService {
   private hashids: Hashids;
 
   constructor(
+    private dataSource: DataSource,
     @InjectRepository(User) private userRepository: UserRepo,
     private configService: ConfigService,
+    private organizationService: OrganizationService,
     private jwtService: JwtService,
     private readonly i18n: I18nService,
   ) {
@@ -51,7 +56,26 @@ export class UserService {
     }
     const salt = bcrypt.genSaltSync(BCRYPT_GEN_SALTS_ROUND);
     const passwordHash = await bcrypt.hash(password, salt);
-    return await this.userRepository.save({ username, password: passwordHash });
+    const queryRunner = this.dataSource.createQueryRunner();
+    try {
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+      const userObject = {
+        username,
+        password: passwordHash,
+      };
+      const user = await queryRunner.manager.save(User, userObject);
+      const organizationObject =
+        this.organizationService.createUserDefaultOrganizationObject(user);
+      await queryRunner.manager.save(Organization, organizationObject);
+      await queryRunner.commitTransaction();
+      return user;
+    } catch (e) {
+      await queryRunner.rollbackTransaction();
+      throw e;
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async loginUser(userRegisterLoginDto: UserRegisterLoginDto): Promise<User> {
@@ -63,7 +87,6 @@ export class UserService {
       const compareResult = await bcrypt.compare(password, user.password);
       if (compareResult) return user;
     }
-    console.log('throw');
     throw new UnauthorizedException(
       await this.i18n.t('errors.WRONG_USERNAME_OR_PASSWORD'),
     );

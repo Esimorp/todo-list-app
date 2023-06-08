@@ -7,11 +7,20 @@ import { UserService } from './user/user.service';
 import { UserRepo } from './repositories/user.repo';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { OrganizationService } from './organization/organization.service';
+import { OrganizationRepo } from './repositories/organization.repo';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Organization])],
   controllers: [UserController],
-  providers: [UserService, UserRepo, ConfigService, JwtService],
+  providers: [
+    UserService,
+    UserRepo,
+    ConfigService,
+    JwtService,
+    OrganizationService,
+    OrganizationRepo,
+  ],
   exports: [UserService, UserRepo],
 })
 export class UserModule {}
