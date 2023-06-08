@@ -1,9 +1,9 @@
 import { Body, Controller, Post, Res } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UserRegisterLoginDto } from './dto/user-register-login.dto';
-import { Public } from '../decorators';
+import { UserRegisterLoginDto } from '../dto/user-register-login.dto';
+import { Public } from '../../decorators';
 import { UserService } from './user.service';
-import { CommonController, RESPONSE_SET_TOKEN_KEY } from '../common';
+import { CommonController, RESPONSE_SET_TOKEN_KEY } from '../../common';
 import { Response } from 'express';
 
 @Controller('/user')

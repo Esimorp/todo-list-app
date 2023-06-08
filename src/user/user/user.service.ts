@@ -4,12 +4,12 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities';
-import { UserRepo } from './repositories/user.repo';
-import { UserRegisterLoginDto } from './dto/user-register-login.dto';
+import { User } from '../entities';
+import { UserRepo } from '../repositories/user.repo';
+import { UserRegisterLoginDto } from '../dto/user-register-login.dto';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
-import { APP_SECRET } from '../common';
+import { APP_SECRET } from '../../common';
 import Hashids from 'hashids';
 import { JwtService } from '@nestjs/jwt';
 import { I18nService } from 'nestjs-i18n';
