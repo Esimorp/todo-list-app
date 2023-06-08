@@ -3,14 +3,18 @@ import { CommonController } from '../../common';
 import { TodoChangeLogService } from './todo-change-log.service';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TodoChangeLog } from '../entities';
-import { Uid } from '../../decorators';
-import { ApiSuccessPageResponseDecorator } from '../../decorators/api-success-page-response.decorator';
+import {
+  ApiNeedLoginDecorator,
+  ApiSuccessPageResponseDecorator,
+  Uid,
+} from '../../decorators';
 import { FindPageDto } from '../../common/find-page.dto';
 
 @Controller()
 export class TodoChangeLogController extends CommonController {
   @Get('/todo/:todoId/change-log')
   @ApiTags('Todo相关')
+  @ApiNeedLoginDecorator()
   @ApiOperation({ description: 'Todo修改历史记录' })
   @ApiParam({
     name: 'todoId',

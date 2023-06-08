@@ -9,7 +9,12 @@ import {
   Query,
 } from '@nestjs/common';
 import { CreateTodoDto } from '../dto/create-todo.dto';
-import { Uid } from '../../decorators';
+import {
+  ApiNeedLoginDecorator,
+  ApiSuccessPageResponseDecorator,
+  ApiSuccessResponse,
+  Uid,
+} from '../../decorators';
 import {
   ApiBody,
   ApiOperation,
@@ -19,12 +24,10 @@ import {
 } from '@nestjs/swagger';
 import { CommonController } from '../../common';
 import { TodoService } from './todo.service';
-import { ApiSuccessResponse } from '../../decorators/api-success-response.decorator';
 import { Todo, TodoChangeLog } from '../entities';
 import { UpdateTodoDto } from '../dto/update-todo.dto';
 import { AddSubTodoDto } from '../dto/add-sub-todo.dto';
 import { FindPageDto } from '../../common/find-page.dto';
-import { ApiSuccessPageResponseDecorator } from '../../decorators/api-success-page-response.decorator';
 import { FindTodoDto } from '../dto/find-todo.dto';
 
 @Controller('todo')
@@ -35,6 +38,7 @@ export class TodoController extends CommonController {
 
   @Post()
   @ApiTags('Todo相关')
+  @ApiNeedLoginDecorator()
   @ApiOperation({ description: '创建Todo接口' })
   @ApiBody({
     type: CreateTodoDto,
@@ -62,14 +66,7 @@ export class TodoController extends CommonController {
     status: 400,
     description: 'todo不存在',
   })
-  @ApiResponse({
-    status: 403,
-    description: '权限验证失败',
-  })
-  @ApiResponse({
-    status: 401,
-    description: '用户未登录',
-  })
+  @ApiNeedLoginDecorator()
   @ApiSuccessResponse(Todo)
   public async updateTodo(@Body() updateTodoDto: UpdateTodoDto, @Uid() uid) {
     const updatedTodo = await this.todoService.updateTodo(updateTodoDto, uid);
@@ -88,14 +85,7 @@ export class TodoController extends CommonController {
     status: 400,
     description: 'todo不存在',
   })
-  @ApiResponse({
-    status: 403,
-    description: '权限验证失败',
-  })
-  @ApiResponse({
-    status: 401,
-    description: '用户未登录',
-  })
+  @ApiNeedLoginDecorator()
   @ApiSuccessResponse(Todo)
   public async addSubTodo(@Body() addSubTodoDto: AddSubTodoDto, @Uid() uid) {
     const createdTodo = await this.todoService.addSubTodo(addSubTodoDto, uid);
@@ -115,14 +105,7 @@ export class TodoController extends CommonController {
     status: 400,
     description: 'todo不存在',
   })
-  @ApiResponse({
-    status: 403,
-    description: '权限验证失败',
-  })
-  @ApiResponse({
-    status: 401,
-    description: '用户未登录',
-  })
+  @ApiNeedLoginDecorator()
   @ApiSuccessResponse(Todo)
   public async removeTodo(
     @Query('id', ParseIntPipe) todoId: number,
@@ -135,10 +118,7 @@ export class TodoController extends CommonController {
   @Get()
   @ApiTags('Todo相关')
   @ApiOperation({ description: 'Todo修改历史记录' })
-  @ApiResponse({
-    status: 401,
-    description: '用户未登录',
-  })
+  @ApiNeedLoginDecorator()
   @ApiSuccessPageResponseDecorator(TodoChangeLog)
   public async listTodos(
     @Query() findPageDto: FindPageDto,
