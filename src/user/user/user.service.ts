@@ -68,4 +68,11 @@ export class UserService {
       await this.i18n.t('errors.WRONG_USERNAME_OR_PASSWORD'),
     );
   }
+
+  async verifyUserToken(payload) {
+    const { uid } = payload;
+    //TODO do other check
+    const id = this.hashids.decode(uid)[0] as number;
+    return this.userRepository.findOneBy({ id });
+  }
 }
