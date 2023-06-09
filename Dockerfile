@@ -5,6 +5,6 @@ RUN npm install --production --registry https://registry.npm.taobao.org/
 COPY . .
 RUN npm run build
 RUN chmod +x entrypoint.sh
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["entrypoint.sh"]
 
 
