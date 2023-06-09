@@ -15,9 +15,10 @@ import { TodoListModule } from './todo-list/todo-list.module';
 import { UserModule } from './user/user.module';
 import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
 import * as path from 'path';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards';
 import { JwtModule } from '@nestjs/jwt';
+import { AppExceptionsFilter } from './filters/app-exceptions.filter';
 
 @Module({
   imports: [
@@ -62,6 +63,10 @@ import { JwtModule } from '@nestjs/jwt';
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: AppExceptionsFilter,
     },
   ],
 })
