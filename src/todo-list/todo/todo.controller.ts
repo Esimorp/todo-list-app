@@ -117,7 +117,7 @@ export class TodoController extends CommonController {
 
   @Get()
   @ApiTags('Todo相关')
-  @ApiOperation({ description: 'Todo修改历史记录' })
+  @ApiOperation({ description: 'Todo列表' })
   @ApiNeedLoginDecorator()
   @ApiSuccessPageResponseDecorator(TodoChangeLog)
   public async listTodos(
