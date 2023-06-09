@@ -3,7 +3,6 @@ import { User } from '../entities';
 import { I18nService } from 'nestjs-i18n';
 import { OrganizationRepo } from '../repositories/organization.repo';
 import { Organization } from '../entities/organization.entity';
-import { UserJoinQuiteOrganizationDto } from '../dto/user-join-quite-organization.dto';
 
 @Injectable()
 export class OrganizationService {
@@ -20,11 +19,7 @@ export class OrganizationService {
     return organization;
   }
 
-  public async userJoinOrganization(
-    uid: number,
-    userJoinQuiteOrganizationDto: UserJoinQuiteOrganizationDto,
-  ) {
-    const { organizationId } = userJoinQuiteOrganizationDto;
+  public async userJoinOrganization(uid: number, organizationId: number) {
     const organization = await this.organizationRepo.findOne({
       where: {
         id: organizationId,

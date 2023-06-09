@@ -1,9 +1,8 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Controller, Param, Post } from '@nestjs/common';
 import { OrganizationService } from './organization.service';
 import { CommonController } from '../../common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ApiNeedLoginDecorator, Uid } from '../../decorators';
-import { UserJoinQuiteOrganizationDto } from '../dto/user-join-quite-organization.dto';
 
 @Controller('/organization')
 export class OrganizationController extends CommonController {
@@ -14,17 +13,18 @@ export class OrganizationController extends CommonController {
   @ApiTags('用户相关')
   @ApiOperation({ description: '用户加入组织接口' })
   @ApiNeedLoginDecorator()
-  @Post('/member')
+  @ApiParam({
+    name: 'organizationId',
+    description: '要加入的组织的id',
+    example: 1,
+  })
+  @Post('/:organizationId/member')
   async userJoinOrganization(
-    @Body() userJoinQuiteOrganizationDto: UserJoinQuiteOrganizationDto,
+    @Param('organizationId') organizationId,
     @Uid() uid: number,
   ) {
-    console.log(uid);
     try {
-      await this.organizationService.userJoinOrganization(
-        uid,
-        userJoinQuiteOrganizationDto,
-      );
+      await this.organizationService.userJoinOrganization(uid, organizationId);
       return this.success('ok');
     } catch (e) {
       return this.fail(e);
