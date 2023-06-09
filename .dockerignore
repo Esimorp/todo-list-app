@@ -1,0 +1,10 @@
+database
+node_modules
+test
+.dockerignore
+.eslintrc.js
+.gitignore
+.prettierrc
+Dockerfile
+README.md
+
