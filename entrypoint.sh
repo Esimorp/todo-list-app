@@ -1,2 +1,2 @@
-npm run typeorm:run-migrations &
-node dist/main
+npm run typeorm:run-migrations &&
+  node dist/main
