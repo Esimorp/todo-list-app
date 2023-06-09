@@ -96,6 +96,7 @@ export class UserService {
     const { uid } = payload;
     //TODO do other check
     const id = this.hashids.decode(uid)[0] as number;
+    console.log(id);
     return this.userRepository.findOneBy({ id });
   }
 }
