@@ -17,7 +17,12 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "typeorm:run-migrations": "npm run typeorm migration:run -- -d ./type-orm-cli.config.ts",
+    "typeorm:generate-migration": "npm run typeorm -- -d ./type-orm-cli.config.ts migration:generate ./migrations/todolist-app",
+    "typeorm:create-migration": "npm run typeorm -- migration:create ./migrations/todolist-app",
+    "typeorm:revert-migration": "npm run typeorm -- -d ./type-orm-cli.config.ts migration:revert"
   },
   "dependencies": {
     "@nestjs/cli": "^9.5.0",
@@ -31,6 +36,7 @@
     "bcrypt": "^5.1.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "dotenv": "^16.1.4",
     "hashids": "^2.3.0",
     "mysql2": "^3.3.3",
     "nest-winston": "^1.9.2",

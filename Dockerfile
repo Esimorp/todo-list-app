@@ -3,6 +3,8 @@ WORKDIR /var/opt/app
 COPY package*.json ./
 RUN npm install --production --registry https://registry.npm.taobao.org/
 COPY . .
-CMD npm run start
+RUN npm run build
+RUN npm run typeorm:run-migrations
+CMD [ "node", "dist/main" ]
 
 
