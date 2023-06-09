@@ -17,7 +17,6 @@ import {
 } from 'typeorm';
 import { UpdateTodoDto } from '../dto/update-todo.dto';
 import { AddSubTodoDto } from '../dto/add-sub-todo.dto';
-import { I18nService } from 'nestjs-i18n';
 import { TodoChangeLogService } from '../change-log';
 import { FindPageDto } from '../../common/find-page.dto';
 import { FindTodoDto } from '../dto/find-todo.dto';
@@ -28,7 +27,6 @@ export class TodoService {
   constructor(
     @InjectRepository(TodoRepo)
     private todoRepository: TodoRepo,
-    private readonly i18n: I18nService,
     private todoChangeLogService: TodoChangeLogService,
     private organizationService: OrganizationService,
   ) {}
@@ -43,9 +41,7 @@ export class TodoService {
         createTodoDto.organizationId,
       );
     if (!userInOrganization)
-      throw new ForbiddenException(
-        await this.i18n.t('errors.USER_IS_NOT_IN_ORGANIZATION'),
-      );
+      throw new ForbiddenException('errors.USER_IS_NOT_IN_ORGANIZATION');
     const todo: DeepPartial<Todo> = createTodoDto;
     todo.owner = { id: userId };
     todo.organization = { id: createTodoDto.organizationId };
@@ -65,14 +61,9 @@ export class TodoService {
   ): Promise<Todo> {
     const { id } = updateTodoDto;
     const existed = await this.todoRepository.findOneBy({ id });
-    if (!existed)
-      throw new BadRequestException(
-        await this.i18n.t('errors.TODO_NOT_EXISTED'),
-      );
+    if (!existed) throw new BadRequestException('errors.TODO_NOT_EXISTED');
     if (existed.owner.id != userId)
-      throw new ForbiddenException(
-        await this.i18n.t('errors.WRONG_PERMISSIONS'),
-      );
+      throw new ForbiddenException('errors.WRONG_PERMISSIONS');
     if (updateTodoDto.description) {
       await this.todoChangeLogService.addChangeLog(
         TodoChangeAction.UPDATE_TODO_DESCRIPTION,
@@ -106,14 +97,9 @@ export class TodoService {
   ): Promise<Todo> {
     const { parentId } = addSubTodoDto;
     const parent = await this.todoRepository.findOneBy({ id: parentId });
-    if (!parent)
-      throw new BadRequestException(
-        await this.i18n.t('errors.TODO_NOT_EXISTED'),
-      );
+    if (!parent) throw new BadRequestException('errors.TODO_NOT_EXISTED');
     if (parent.owner.id != userId)
-      throw new ForbiddenException(
-        await this.i18n.t('errors.WRONG_PERMISSIONS'),
-      );
+      throw new ForbiddenException('errors.WRONG_PERMISSIONS');
     const subTodo: DeepPartial<Todo> = addSubTodoDto;
     subTodo.parentTodo = { id: addSubTodoDto.parentId };
     subTodo.owner = { id: userId };
@@ -136,14 +122,9 @@ export class TodoService {
 
   public async removeTodo(todoId: number, userId: number): Promise<Todo> {
     const existed = await this.todoRepository.findOneBy({ id: todoId });
-    if (!existed)
-      throw new BadRequestException(
-        await this.i18n.t('errors.TODO_NOT_EXISTED'),
-      );
+    if (!existed) throw new BadRequestException('errors.TODO_NOT_EXISTED');
     if (existed.owner.id != userId)
-      throw new ForbiddenException(
-        await this.i18n.t('errors.WRONG_PERMISSIONS'),
-      );
+      throw new ForbiddenException('errors.WRONG_PERMISSIONS');
     return await this.todoRepository.softRemove(existed);
   }
 
@@ -158,9 +139,7 @@ export class TodoService {
         findTodoDto.organizationId,
       );
     if (!userInOrganization)
-      throw new ForbiddenException(
-        await this.i18n.t('errors.USER_IS_NOT_IN_ORGANIZATION'),
-      );
+      throw new ForbiddenException('errors.USER_IS_NOT_IN_ORGANIZATION');
     const where = {
       organization: { id: findTodoDto.organizationId },
     } as FindOptionsWhere<Todo>;

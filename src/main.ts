@@ -3,8 +3,8 @@ import { AppModule } from './app.module';
 import { APP_RUNNING_PORT, logger } from './common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { BadRequestException, ValidationPipe } from '@nestjs/common';
-import { ValidationError } from 'class-validator';
+import { ValidationPipe } from '@nestjs/common';
+import { i18nValidationErrorFactory } from 'nestjs-i18n';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -26,11 +26,7 @@ async function bootstrap() {
       transform: true,
       whitelist: true,
       transformOptions: { enableImplicitConversion: true },
-      exceptionFactory: (validationErrors: ValidationError[] = []) => {
-        const constraints = validationErrors[0].constraints;
-        const firstKey = Object.keys(constraints)[0];
-        return new BadRequestException(constraints[firstKey]);
-      },
+      exceptionFactory: i18nValidationErrorFactory,
     }),
   );
 

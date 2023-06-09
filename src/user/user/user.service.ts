@@ -12,7 +12,6 @@ import { ConfigService } from '@nestjs/config';
 import { APP_SECRET } from '../../common';
 import Hashids from 'hashids';
 import { JwtService } from '@nestjs/jwt';
-import { I18nService } from 'nestjs-i18n';
 import { OrganizationService } from '../organization/organization.service';
 import { DataSource } from 'typeorm';
 import { Organization } from '../entities/organization.entity';
@@ -29,7 +28,6 @@ export class UserService {
     private configService: ConfigService,
     private organizationService: OrganizationService,
     private jwtService: JwtService,
-    private readonly i18n: I18nService,
   ) {
     const secret = this.configService.getOrThrow(APP_SECRET);
     this.hashids = new Hashids(secret);
@@ -50,9 +48,7 @@ export class UserService {
     const { username, password } = userRegisterDto;
     const existedUser = await this.userRepository.findOneBy({ username });
     if (existedUser) {
-      throw new BadRequestException(
-        await this.i18n.t('errors.USERNAME_ALREADY_EXISTED'),
-      );
+      throw new BadRequestException('errors.USERNAME_ALREADY_EXISTED');
     }
     const salt = bcrypt.genSaltSync(BCRYPT_GEN_SALTS_ROUND);
     const passwordHash = await bcrypt.hash(password, salt);
@@ -87,16 +83,13 @@ export class UserService {
       const compareResult = await bcrypt.compare(password, user.password);
       if (compareResult) return user;
     }
-    throw new UnauthorizedException(
-      await this.i18n.t('errors.WRONG_USERNAME_OR_PASSWORD'),
-    );
+    throw new UnauthorizedException('errors.WRONG_USERNAME_OR_PASSWORD');
   }
 
   async verifyUserToken(payload) {
     const { uid } = payload;
     //TODO do other check
     const id = this.hashids.decode(uid)[0] as number;
-    console.log(id);
     return this.userRepository.findOneBy({ id });
   }
 }

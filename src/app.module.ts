@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
@@ -68,6 +68,7 @@ import { AppExceptionsFilter } from './filters/app-exceptions.filter';
       provide: APP_FILTER,
       useClass: AppExceptionsFilter,
     },
+    Logger,
   ],
 })
 export class AppModule {}

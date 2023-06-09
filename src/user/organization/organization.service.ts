@@ -1,15 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { User } from '../entities';
-import { I18nService } from 'nestjs-i18n';
 import { OrganizationRepo } from '../repositories/organization.repo';
 import { Organization } from '../entities/organization.entity';
 
 @Injectable()
 export class OrganizationService {
-  constructor(
-    private organizationRepo: OrganizationRepo,
-    private readonly i18n: I18nService,
-  ) {}
+  constructor(private organizationRepo: OrganizationRepo) {}
 
   public createUserDefaultOrganizationObject(user: User) {
     const organization = new Organization();
@@ -27,15 +23,11 @@ export class OrganizationService {
       relations: { members: true },
     });
     if (!organization) {
-      throw new BadRequestException(
-        await this.i18n.t('errors.ORGANIZATION_NOT_EXISTED'),
-      );
+      throw new BadRequestException('errors.ORGANIZATION_NOT_EXISTED');
     }
 
     if (organization.members.some((member) => member.id === uid)) {
-      throw new BadRequestException(
-        await this.i18n.t('errors.USER_ALREADY_IN_ORGANIZATION'),
-      );
+      throw new BadRequestException('errors.USER_ALREADY_IN_ORGANIZATION');
     }
     organization.members.push({ id: uid } as User);
     await this.organizationRepo.save(organization);
@@ -49,9 +41,7 @@ export class OrganizationService {
       relations: { members: true },
     });
     if (!organization) {
-      throw new BadRequestException(
-        await this.i18n.t('errors.ORGANIZATION_NOT_EXISTED'),
-      );
+      throw new BadRequestException('errors.ORGANIZATION_NOT_EXISTED');
     }
     return organization.members.some((member) => member.id === uid);
   }
