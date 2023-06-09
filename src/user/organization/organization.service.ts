@@ -40,4 +40,19 @@ export class OrganizationService {
     organization.members.push({ id: uid } as User);
     await this.organizationRepo.save(organization);
   }
+
+  public async isUserInOrganization(uid, organizationId) {
+    const organization = await this.organizationRepo.findOne({
+      where: {
+        id: organizationId,
+      },
+      relations: { members: true },
+    });
+    if (!organization) {
+      throw new BadRequestException(
+        await this.i18n.t('errors.ORGANIZATION_NOT_EXISTED'),
+      );
+    }
+    return organization.members.some((member) => member.id === uid);
+  }
 }

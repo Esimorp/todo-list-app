@@ -22,6 +22,6 @@ import { OrganizationController } from './organization/organization.controller';
     OrganizationService,
     OrganizationRepo,
   ],
-  exports: [UserService, UserRepo],
+  exports: [UserService, UserRepo, OrganizationService],
 })
 export class UserModule {}

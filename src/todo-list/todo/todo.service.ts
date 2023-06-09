@@ -21,6 +21,7 @@ import { I18nService } from 'nestjs-i18n';
 import { TodoChangeLogService } from '../change-log';
 import { FindPageDto } from '../../common/find-page.dto';
 import { FindTodoDto } from '../dto/find-todo.dto';
+import { OrganizationService } from '../../user/organization/organization.service';
 
 @Injectable()
 export class TodoService {
@@ -29,16 +30,25 @@ export class TodoService {
     private todoRepository: TodoRepo,
     private readonly i18n: I18nService,
     private todoChangeLogService: TodoChangeLogService,
+    private organizationService: OrganizationService,
   ) {}
 
   public async createTodo(
     createTodoDto: CreateTodoDto,
     userId: number,
   ): Promise<Todo> {
+    const userInOrganization =
+      await this.organizationService.isUserInOrganization(
+        userId,
+        createTodoDto.organizationId,
+      );
+    if (!userInOrganization)
+      throw new ForbiddenException(
+        await this.i18n.t('errors.USER_IS_NOT_IN_ORGANIZATION'),
+      );
     const todo: DeepPartial<Todo> = createTodoDto;
     todo.owner = { id: userId };
-
-    //TODO do with createTodoDto.organizationId
+    todo.organization = { id: createTodoDto.organizationId };
     const result = await this.todoRepository.save(todo);
     await this.todoChangeLogService.addChangeLog(
       TodoChangeAction.CREATE_TODO,
@@ -137,9 +147,23 @@ export class TodoService {
     return await this.todoRepository.softRemove(existed);
   }
 
-  async findTodos(findPageDto: FindPageDto, findTodoDto: FindTodoDto) {
-    //TODO find with findTodoDto.organizationId
-    const where = {} as FindOptionsWhere<Todo>;
+  async findTodos(
+    findPageDto: FindPageDto,
+    findTodoDto: FindTodoDto,
+    userId: number,
+  ) {
+    const userInOrganization =
+      await this.organizationService.isUserInOrganization(
+        userId,
+        findTodoDto.organizationId,
+      );
+    if (!userInOrganization)
+      throw new ForbiddenException(
+        await this.i18n.t('errors.USER_IS_NOT_IN_ORGANIZATION'),
+      );
+    const where = {
+      organization: { id: findTodoDto.organizationId },
+    } as FindOptionsWhere<Todo>;
     const orderBy = {} as FindOptionsOrder<Todo>;
     const { startAt, endAt, ownerId, order } = findTodoDto;
     if (startAt && endAt) {

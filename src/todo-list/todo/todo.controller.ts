@@ -128,6 +128,7 @@ export class TodoController extends CommonController {
     const [list, total] = await this.todoService.findTodos(
       findPageDto,
       findTodoDto,
+      uid,
     );
     return this.successPage(
       list,

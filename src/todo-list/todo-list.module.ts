@@ -12,6 +12,7 @@ import { TodoRepo } from './repositories/todo.repo';
 import { I18nContext } from 'nestjs-i18n';
 import { TodoChangeLogRepo } from './repositories/todo-change-log.repo';
 import { TodoChangeLogController, TodoChangeLogService } from './change-log';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { TodoChangeLogController, TodoChangeLogService } from './change-log';
       Mention,
       MessageInbox,
     ]),
+    UserModule,
   ],
   controllers: [TodoController, TodoChangeLogController],
   providers: [
