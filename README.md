@@ -16,3 +16,18 @@
 ## Notice
 
 文档中的测试Token的用户Id是1，要先调用注册接口注册一个用户才可以使用这个Token
+
+## 项目结构简介
+
+* /database 项目所使用的mysql的docker-compose文件以及volume文件夹
+* migrations typeorm的迁移文件
+* src 源码目录
+    * common 通用类库
+    * decorators 注解
+    * filters 响应过滤器
+    * guards 守卫
+    * i18n 国际化配置文件
+    * todo-list todo 模块
+    * user 用户模块
+* working-dir 日志以及env文件存放的目录，通过docker部署时可映射到HOST
+* type-orm-cli.config.ts 执行typeorm迁移时所使用的配置文件
